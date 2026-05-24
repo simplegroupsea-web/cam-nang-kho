@@ -1,0 +1,9 @@
+﻿Vấn đề,Nội dung quy trình (kèm tên ảnh nếu có)
+"Nội quy, lương thưởng","Lương sẽ được thanh toán vào mùng 5 hàng tháng qua chuyển khoản. Nhân viên đi làm đúng giờ, ca sáng 8h-12h, ca chiều 13h-17h."
+Quy trình đóng đơn hàng,"Khi đóng đơn, phải đối chiếu kỹ mã SKU, Màu sắc và Size trên hóa đơn. Gói hàng phải dán băng keo niêm phong 2 vòng chéo nhau. [ANH: hoa-don1.jpg] [ANH: hoa-don2.jpg]"
+Vị trí áo và sơ đồ kho,Áo thun cổ tròn để ở Kệ A (tầng trệt). Áo Sweater và áo khoác để ở Kệ B (lầu 1). Vui lòng nhìn sơ đồ để lấy hàng cho nhanh. [ANH: hoa-don1.jpg] [ANH: hoa-don2.jpg]
+Quy trình dập hình lên áo,"Nhiệt độ máy ép là 160 độ, thời gian ép 15 giây. Nhớ lót giấy nến trước khi ép để không bị cháy hình. [ANH: hoa-don1.jpg] [ANH: hoa-don2.jpg]"
+Gửi hàng bưu cục,"Đơn vị vận chuyển (SPX, GHTK) sẽ qua kho lấy hàng lúc 16h chiều mỗi ngày. Các đơn chốt sau 15h30 sẽ chuyển sang ngày hôm sau."
+"Tìm ảnh sản phẩm, xem hình áo",https://tim-anh-san-pham.streamlit.app/  ban vao day nhe
+,
+,
