@@ -53,7 +53,7 @@ QUY TẮC BẮT BUỘC:
 """
 
 # Khởi tạo bản Pro 1.0 Quốc dân (Không bao giờ lỗi NotFound)
-model = genai.GenerativeModel(model_name="gemini-2.0-flash")
+model = genai.GenerativeModel(model_name="gemini-3.5-flash")
 
 # Khởi tạo bộ nhớ chat
 if "messages" not in st.session_state:
