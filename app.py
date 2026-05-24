@@ -53,7 +53,7 @@ QUY TẮC BẮT BUỘC:
 
 # Khởi tạo AI với tên chuẩn nhất
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
+    model_name="gemini-1.5-flash-latest",
     system_instruction=system_instruction
 )
 
