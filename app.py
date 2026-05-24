@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 import pandas as pd
 import os
-import re  # Thư viện mới giúp quét tìm NHIỀU ảnh cùng lúc
+import re
 
 # 1. CẤU HÌNH GIAO DIỆN
 st.set_page_config(page_title="Cẩm Nang Vận Hành Kho", page_icon="🤖", layout="centered")
@@ -39,7 +39,6 @@ def load_knowledge_base():
 
 kho_du_lieu = load_knowledge_base()
 
-# Vòng kim cô của AI
 system_instruction = f"""
 Ngươi là trợ lý vận hành nội bộ của Phong Boutique. 
 Dưới đây là toàn bộ quy trình của cửa hàng:
@@ -52,8 +51,9 @@ QUY TẮC BẮT BUỘC:
 4. Nếu trong dữ liệu có chứa các đoạn mã [ANH: ten_file.jpg], phải giữ nguyên TẤT CẢ các đoạn mã đó trong câu trả lời của ngươi.
 """
 
+# Khởi tạo AI với tên chuẩn nhất
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash-latest",
+    model_name="gemini-1.5-flash",
     system_instruction=system_instruction
 )
 
@@ -65,9 +65,8 @@ if "messages" not in st.session_state:
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
-        # Hiển thị nhiều ảnh trong lịch sử
         if "images" in msg and msg["images"]:
-            cols = st.columns(2) # Chia 2 cột cho gọn
+            cols = st.columns(2)
             for i, img_path in enumerate(msg["images"]):
                 with cols[i % 2]:
                     st.image(img_path, use_container_width=True)
@@ -80,29 +79,28 @@ if prompt := st.chat_input("Nhập câu hỏi hoặc bấm Micro trên bàn phí
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        response = model.generate_content(prompt)
-        bot_reply = response.text
-        
-        # Quét tìm TẤT CẢ các thẻ ảnh bằng biểu thức chính quy (Regex)
-        images_to_show = []
-        matches = re.findall(r'\[ANH:\s*(.*?)\s*\]', bot_reply)
-        for img_name in matches:
-            full_img_path = os.path.join("images_quy_trinh", img_name.strip())
-            if os.path.exists(full_img_path):
-                images_to_show.append(full_img_path)
+        try:
+            response = model.generate_content(prompt)
+            bot_reply = response.text
+            
+            images_to_show = []
+            matches = re.findall(r'\[ANH:\s*(.*?)\s*\]', bot_reply)
+            for img_name in matches:
+                full_img_path = os.path.join("images_quy_trinh", img_name.strip())
+                if os.path.exists(full_img_path):
+                    images_to_show.append(full_img_path)
 
-        # Xóa các mã [ANH:...] ra khỏi chữ để hiển thị cho đẹp
-        clean_reply = re.sub(r'\[ANH:\s*.*?\s*\]', '', bot_reply).strip()
-        
-        # In chữ ra màn hình
-        st.markdown(clean_reply)
-        
-        # In ảnh ra màn hình (chia làm 2 cột)
-        if images_to_show:
-            cols = st.columns(2)
-            for i, img_path in enumerate(images_to_show):
-                with cols[i % 2]:
-                    st.image(img_path, use_container_width=True)
+            clean_reply = re.sub(r'\[ANH:\s*.*?\s*\]', '', bot_reply).strip()
+            
+            st.markdown(clean_reply)
+            
+            if images_to_show:
+                cols = st.columns(2)
+                for i, img_path in enumerate(images_to_show):
+                    with cols[i % 2]:
+                        st.image(img_path, use_container_width=True)
 
-    # Lưu cả chữ và danh sách ảnh vào bộ nhớ
-    st.session_state.messages.append({"role": "assistant", "content": clean_reply, "images": images_to_show})
+            st.session_state.messages.append({"role": "assistant", "content": clean_reply, "images": images_to_show})
+            
+        except Exception as e:
+            st.error(f"Lỗi kết nối AI: {e}. Vui lòng thử lại sau.")
