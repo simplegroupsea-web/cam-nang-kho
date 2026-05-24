@@ -39,7 +39,8 @@ def load_knowledge_base():
 
 kho_du_lieu = load_knowledge_base()
 
-system_instruction = f"""
+# Bộ luật ngầm
+luat_ngam = f"""
 Ngươi là trợ lý vận hành nội bộ của Phong Boutique. 
 Dưới đây là toàn bộ quy trình của cửa hàng:
 {kho_du_lieu}
@@ -51,11 +52,8 @@ QUY TẮC BẮT BUỘC:
 4. Nếu trong dữ liệu có chứa các đoạn mã [ANH: ten_file.jpg], phải giữ nguyên TẤT CẢ các đoạn mã đó trong câu trả lời của ngươi.
 """
 
-# Khởi tạo AI với tên chuẩn nhất
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    system_instruction=system_instruction
-)
+# Khởi tạo bản Pro 1.0 Quốc dân (Không bao giờ lỗi NotFound)
+model = genai.GenerativeModel(model_name="gemini-pro")
 
 # Khởi tạo bộ nhớ chat
 if "messages" not in st.session_state:
@@ -80,7 +78,10 @@ if prompt := st.chat_input("Nhập câu hỏi hoặc bấm Micro trên bàn phí
 
     with st.chat_message("assistant"):
         try:
-            response = model.generate_content(prompt)
+            # Trộn bộ luật ngầm vào chung với câu hỏi của nhân viên
+            cau_hoi_day_du = f"{luat_ngam}\n\nCâu hỏi của nhân viên: {prompt}"
+            
+            response = model.generate_content(cau_hoi_day_du)
             bot_reply = response.text
             
             images_to_show = []
